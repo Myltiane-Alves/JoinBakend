@@ -1,10 +1,10 @@
-import { MigrationInterface, QueryRunner, Table } from "typeorm"
+import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm"
 
 export class Client1665426938439 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(new Table({
-            name: "client",
+            name: "clients",
             columns: [
                 {
                     name: "id",
@@ -33,13 +33,24 @@ export class Client1665426938439 implements MigrationInterface {
                     type: "varchar",
                     isNullable: false,
                 },
-                
+                {
+                    name: "createdAt",
+                    type: "datetime",
+                    default: "CURRENT_TIMESTAMP",   
+                },
+                {
+                    name: "updatedAt",
+                    type: "datetime",
+                    default: "CURRENT_TIMESTAMP",
+                },
             ],
-        }))
+        }));
+
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropTable("client")
+       
+        await queryRunner.dropTable("clients")
     }
 
 }

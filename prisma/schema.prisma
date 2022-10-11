@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model migrations {
+  id        Int    @id @default(autoincrement())
+  timestamp BigInt
+  name      String @db.VarChar(255)
+}
+
+model clients {
+  id          Int       @id @default(autoincrement())
+  contactName String    @db.VarChar(255)
+  cnpj        String    @db.VarChar(255)
+  reason      String    @db.VarChar(255)
+  phone       String    @db.VarChar(255)
+  createdAt   DateTime  @default(now()) @db.DateTime(0)
+  updatedAt   DateTime  @default(now()) @db.DateTime(0)
+  address     address[]
+}
+
+model address {
+  id         Int      @id @default(autoincrement())
+  logradouro String   @db.VarChar(255)
+  number     String   @db.VarChar(255)
+  complement String?  @db.VarChar(255)
+  district   String   @db.VarChar(255)
+  city       String   @db.VarChar(255)
+  state      String   @db.VarChar(255)
+  zipcode    String   @db.VarChar(255)
+  latitude   Decimal? @db.Decimal(10, 8)
+  longitude  Decimal? @db.Decimal(11, 8)
+  clientId   Int
+  createdAt  DateTime @default(now()) @db.DateTime(0)
+  updatedAt  DateTime @default(now()) @db.DateTime(0)
+  clients    clients  @relation(fields: [clientId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_address_clients")
+
+  @@index([clientId], map: "FK_address_clients")
+}
