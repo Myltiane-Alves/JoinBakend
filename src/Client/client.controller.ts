@@ -9,14 +9,14 @@ export class ClientController {
         private clientService: ClientService,
     ) {}
 
-    @Get()
-    async getAll() {
-        return this.clientService.getAll();
+    @Get(':id')
+    async show(@Param('id') id ) {
+        return this.clientService.getById(id);
     }
 
-    @Get(':id')
-    async getById(@Param('id') id ) {
-        return this.clientService.getById(id);
+    @Get()
+    async showByEmail(@Param('email') email: string) {
+        return this.clientService.getByEmail(email);
     }
 
     @Post()

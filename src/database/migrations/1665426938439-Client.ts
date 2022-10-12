@@ -14,23 +14,41 @@ export class Client1665426938439 implements MigrationInterface {
                     generationStrategy: "increment",
                 },
                 {
-                    name: "contactName",
+                    name: "name",
                     type: "varchar",
+                    length: "255",
                     isNullable: false,
                 },
                 {
                     name: "cnpj",
                     type: "varchar",
+                    length: "255",
                     isNullable: false,
+                    isUnique: true,
                 },
                 {
                     name: "reason",
                     type: "varchar",
+                    length: "255",
                     isNullable: false,
                 },
                 {
                     name: "phone",
                     type: "varchar",
+                    length: "20",
+                    isNullable: false,
+                },
+                {
+                    name: "email",
+                    type: "varchar",
+                    length: "255",
+                    isNullable: false,
+                    isUnique: true,
+                },
+                {
+                    name: "password",
+                    type: "varchar",
+                    length: "255",
                     isNullable: false,
                 },
                 {
@@ -48,8 +66,7 @@ export class Client1665426938439 implements MigrationInterface {
 
     }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-       
+    public async down(queryRunner: QueryRunner): Promise<void> {     
         await queryRunner.dropTable("clients")
     }
 

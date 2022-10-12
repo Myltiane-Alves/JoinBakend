@@ -1,6 +1,7 @@
 
 import { Body, Controller, Get, Post, Put, Delete, Param } from '@nestjs/common';
 import { CreatedAddressDto } from 'src/address/dto/create-address.dto';
+import { Client } from 'src/Client/client.decorator';
 import { AddressService } from './address.service';
 import { UpdatedAddressDto } from './dto/update-address.dto';
 
@@ -22,8 +23,8 @@ export class AddressController {
     }
 
     @Post()
-    async create(@Body() data: CreatedAddressDto){
-        return this.addressService.create(data);
+    async create(@Body() data: CreatedAddressDto, @Client() client){
+        return this.addressService.create(client.id, data);
     }
 
     @Put(':id') 

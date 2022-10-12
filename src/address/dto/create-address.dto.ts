@@ -10,5 +10,5 @@ export class CreatedAddressDto{
     zipcode: string;
     latitude: Decimal;
     longitude: Decimal;
-    clientId: number;
+   
 }

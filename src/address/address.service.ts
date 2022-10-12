@@ -4,6 +4,7 @@ import { Decimal } from '@prisma/client/runtime';
 import { response } from 'express';
 
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreatedAddressDto } from './dto/create-address.dto';
 
 
 @Injectable()
@@ -11,13 +12,13 @@ export class AddressService {
 
     constructor(
         private prisma: PrismaService,
-    ) {}
-    
+    ) { }
+
     async getById(id: number) {
         id = Number(id);
 
-        if(isNaN(id)){
-            return response.status(400).json({error: 'Id is not a number'});
+        if (isNaN(id)) {
+            return response.status(400).json({ error: 'Id is not a number' });
         }
 
         return await this.prisma.address.findUnique({
@@ -27,11 +28,26 @@ export class AddressService {
         });
     }
 
+    async getByClientcnpj(reason: string) {
+
+        if (!reason) {
+            throw new Error('Reason is required');
+        }
+
+        const client = await this.prisma.clients.findMany({
+            where: {
+                reason,
+            },
+        });
+
+        return client;
+    }
+
     async getAll() {
         return await this.prisma.address.findMany();
     }
 
-    async create({
+    async create(addressId: number, {
         logradouro,
         number,
         complement,
@@ -41,7 +57,6 @@ export class AddressService {
         zipcode,
         latitude,
         longitude,
-        clientId,
     }: {
         logradouro: string;
         number: string;
@@ -52,21 +67,60 @@ export class AddressService {
         zipcode: string;
         latitude: Decimal;
         longitude: Decimal;
-        clientId: number;
-    }
-    ){
-       
-        const { cnpj } = await this.prisma.clients.findUnique({
+    }) {
+
+        if (!logradouro) {
+            throw new Error('Logradouro is required');
+        }
+
+        if (!number) {
+            throw new Error('Number is required');
+        }
+
+        if (!district) {
+            throw new Error('District is required');
+        }
+
+        if (!city) {
+            throw new Error('City is required');
+        }
+
+        if (!state) {
+            throw new Error('State is required');
+        }
+
+        if (!zipcode) {
+            throw new Error('Zipcode is required');
+        }
+
+        if (!latitude) {
+            throw new Error('Latitude is required');
+        }
+
+        if (!longitude) {
+            throw new Error('Longitude is required');
+        }
+
+        const { clientId } = await this.prisma.address.findUnique({
             where: {
-                id: clientId,
+                id: addressId,
             },
             select: {
-                cnpj: true, 
+                clientId: true,
             }
         })
 
-            return this.prisma.address.create({
+        if(!clientId) {
+            throw new Error('Client not found');
+        }
+
+        const addressCreated = await this.prisma.address.create({
             data: {
+                clients: {
+                    connect: {
+                        id: clientId,
+                    }
+                },
                 logradouro,
                 number,
                 complement,
@@ -75,17 +129,11 @@ export class AddressService {
                 state,
                 zipcode,
                 latitude,
-                longitude,
-                clients: {
-                    connect: {
-                        id: clientId,
-                    }                         
-                },
+                longitude, 
             },
-
         });
-       
 
+        return addressCreated;
     }
 
     async update(id: number,
@@ -110,10 +158,10 @@ export class AddressService {
             latitude: Decimal;
             longitude: Decimal;
         }
-    ){
+    ) {
         id = Number(id);
-        if(isNaN(id)){
-            return response.status(400).json({error: 'Id is not a number'});
+        if (isNaN(id)) {
+            return response.status(400).json({ error: 'Id is not a number' });
         }
 
         const addressUpdated = await this.prisma.address.update({
@@ -138,8 +186,8 @@ export class AddressService {
 
     async delete(id: number) {
         id = Number(id);
-        if(isNaN(id)){
-            return response.status(400).json({error: 'Id is not a number'});
+        if (isNaN(id)) {
+            return response.status(400).json({ error: 'Id is not a number' });
         }
 
         const addressDeleted = await this.prisma.address.delete({
@@ -148,9 +196,9 @@ export class AddressService {
             }
         });
 
-        return addressDeleted;  
+        return addressDeleted;
     }
- }
+}
 
 
 
@@ -158,5 +206,5 @@ export class AddressService {
 
 
 
-    
-    
+
+

@@ -29,8 +29,10 @@
   "dependencies": {
     "@nestjs/common": "^9.1.4",
     "@nestjs/core": "^9.1.4",
+    "@nestjs/jwt": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
     "@prisma/client": "^4.4.0",
+    "bcryptjs": "^2.4.3",
     "mysql2": "^2.3.3",
     "prisma": "^4.4.0",
     "reflect-metadata": "^0.1.13",

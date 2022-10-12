@@ -1,7 +1,9 @@
 
 export class CreateClientDto {
-    contactName: string;
+    name: string;
     reason: string;
     cnpj: string;
     phone: string;
+    email: string;
+    password: string;
 }
